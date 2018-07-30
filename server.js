@@ -1,4 +1,6 @@
 const app = require("./app");
+const mongoose = require("mongoose");
+
 const mongodbUri = process.env.MONGODB_URI || "mongodb://localhost/jumpstart";
 
 mongoose.connect(mongodbUri);
