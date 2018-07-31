@@ -28,14 +28,18 @@ test("POST /events/create should create new event", async () => {
   const newEvent = {
     title: "get a life",
     startDate: "13/07/2018",
-    endDate: "28/07/2018"
+    endDate: "15/07/2018"
   };
 
   const response = await request(app)
     .post("/events/create")
     .send(newEvent);
 
-  expect(response.status).toBe(201);
   const events = await Event.find();
+
+  expect(response.status).toBe(201);
   expect(events.length).toEqual(1);
+  expect(events[0].proposedDates).toEqual(
+    expect.arrayContaining(["20180713", "20180714", "20180715"])
+  );
 });
