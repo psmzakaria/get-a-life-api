@@ -1,5 +1,4 @@
 const express = require("express");
-const User = require("../models/user");
 const request = require("supertest");
 
 const usersRouter = require("../routers/usersRoute");
@@ -38,7 +37,7 @@ test("GET /users should return response 200", async () => {
   expect(response.status).toBe(200);
 });
 
-test('POST /signup post a unique new user should return response status 200"', async () => {
+test('POST /signup post a unique new user should return response status 201"', async () => {
   const response = await request(app)
     .post("/users/signup")
     .send(user01);
@@ -62,3 +61,22 @@ test("POST /signup - post a new user with no username should return response sta
   expect(response.status).toBe(500);
 });
 
+// sign a user
+test("POST /signin should return a status of 201", async () => {
+  const response = await request(app)
+    .post("/users/signin")
+    .send(user01);
+  expect(response.status).toBe(201);
+});
+
+// invalid signin - invalid password
+test("POST /signin - post a existing user with an existing username with false password should return response status 500", async () => {
+  const response = await request(app)
+    .post("/users/signin")
+    .send({
+      username: user01.username,
+      password: "wrong password"
+    });
+  expect(response.status).toBe(401);
+  expect(response.body.message).toBe("passwords did not match");
+});
