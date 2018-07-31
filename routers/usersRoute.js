@@ -1,7 +1,7 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const User = require('./../models/user');
-const { jwtOptions } = require('../config/passport');
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const User = require("./../models/user");
+const { jwtOptions } = require("../config/passport");
 
 const router = express.Router();
 
@@ -26,21 +26,21 @@ router.post('/signup', async (req, res, next) => {
 router.post('/signin', async (req, res) => {
 	const { username, password } = req.body;
 
-	const user = await User.findOne({ username: username });
+  const user = await User.findOne({ username: username });
 
-	if (!user) {
-		res.status(401).json({ message: 'no such user found' });
-	}
+  if (!user) {
+    res.status(401).json({ message: "no such user found" });
+  }
 
-	if (user.validPassword(password)) {
-		const userId = { id: user.id };
-		const token = jwt.sign(userId, jwtOptions.secretOrKey);
-		res.json({ message: 'ok', token: token });
-	} else {
-		res.status(401).json({ message: 'passwords did not match' });
-	}
+  if (user.validPassword(password)) {
+    const userId = { id: user.id };
+    const token = jwt.sign(userId, jwtOptions.secretOrKey);
+    res.json({ message: "ok", token: token });
+  } else {
+    res.status(401).json({ message: "passwords did not match" });
+  }
 });
-module.exports = (app) => {
-	app.use(express.json());
-	app.use('/users', router);
+module.exports = app => {
+  app.use(express.json());
+  app.use("/users", router);
 };
