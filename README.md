@@ -2,9 +2,17 @@
 
 Run:
 
+1. Clone and install packages
 ```
 git clone https://github.com/derekc2205/get-a-life-api.git
 npm install
+```
+
+2. Create .env file in root folder and include the following environment variables
+- JWT_Secret
+
+3. Start project
+```
 npm run dev
 ```
 
@@ -19,10 +27,3 @@ Test coverage:
 ```
 npm run test:coverage
 ```
-Installation of  usersRoute dependencies
-npm install passport
-npm install jsonwebtokens
-npm install passport-jwt
-
-Creation of .env folder
-npm install dotenv
