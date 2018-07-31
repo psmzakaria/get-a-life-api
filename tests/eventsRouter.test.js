@@ -2,6 +2,7 @@ const express = require("express");
 const request = require("supertest");
 
 const eventsRoute = require("../routers/eventsRoute");
+const Event = require("../models/event");
 
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongod = new MongoMemoryServer();
@@ -23,7 +24,7 @@ afterAll(() => {
   mongod.stop();
 });
 
-test("POST /", async () => {
+test("POST /events/create should create new event", async () => {
   const newEvent = {
     title: "get a life",
     startDate: "13/07/2018",
@@ -35,4 +36,6 @@ test("POST /", async () => {
     .send(newEvent);
 
   expect(response.status).toBe(201);
+  const events = await Event.find();
+  expect(events.length).toEqual(1);
 });

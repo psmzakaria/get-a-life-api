@@ -10,8 +10,17 @@ const router = express.Router();
 // });
 
 router.post("/create", async (req, res, next) => {
-  console.log("HERE!!!");
-  res.status(201).json("hello");
+  try {
+    const newEvent = new Event({
+      title: req.body.title,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate
+    });
+    await newEvent.save();
+    res.status(201).json();
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = app => {
