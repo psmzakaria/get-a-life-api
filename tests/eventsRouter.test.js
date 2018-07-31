@@ -12,7 +12,7 @@ const app = express();
 eventsRoute(app);
 
 beforeAll(async () => {
-  jest.setTimeout(120000);
+  jest.setTimeout(30000);
 
   const uri = await mongod.getConnectionString();
   await mongoose.connect(uri);

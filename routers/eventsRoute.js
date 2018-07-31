@@ -10,7 +10,8 @@ const router = express.Router();
 // });
 
 router.post("/create", async (req, res, next) => {
-  res.status(201);
+  console.log("HERE!!!");
+  res.status(201).json("hello");
 });
 
 module.exports = app => {
