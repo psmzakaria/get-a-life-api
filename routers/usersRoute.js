@@ -5,12 +5,6 @@ const { jwtOptions } = require("../config/passport");
 
 const router = express.Router();
 
-// KIV, can be deleted if not used. Test written. (ZY)
-router.get("/", (req, res) => {
-  console.log(req.user);
-  res.json({ message: "Express is up!" });
-});
-
 router.post("/signup", async (req, res, next) => {
   const { username, password } = req.body;
   const user = new User({ username });
