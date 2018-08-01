@@ -34,7 +34,6 @@ router.post("/signin", async (req, res) => {
       httpOnly: true,
       secure: false
     }).json({message: "Signed in successfully!"});
-    // res.status(201).json({ message: "ok" });
   } else {
     res.status(401).json({ message: "passwords did not match" });
   }
