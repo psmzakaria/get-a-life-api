@@ -7,5 +7,5 @@ test("should return date object", () => {
 
   const dateInput = `${day}/${month}/${year}`;
 
-  expect(getDate(dateInput)).toEqual(new Date(year, month, day));
+  expect(getDate(dateInput)).toEqual(new Date(`${year}/${month}/${day}`));
 });
