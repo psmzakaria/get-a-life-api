@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
@@ -29,7 +30,11 @@ router.post("/signin", async (req, res) => {
   if (user.validPassword(password)) {
     const userId = { id: user.id };
     const token = jwt.sign(userId, jwtOptions.secretOrKey);
-    res.status(201).json({ message: "ok", token: token });
+    res.status(201).cookie("jwt", token, {
+      httpOnly: true,
+      secure: false
+    }).json({message: "Signed in successfully!"});
+    // res.status(201).json({ message: "ok" });
   } else {
     res.status(401).json({ message: "passwords did not match" });
   }

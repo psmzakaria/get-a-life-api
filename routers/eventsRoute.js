@@ -1,4 +1,6 @@
+require("dotenv").config();
 const express = require("express");
+const { passport } = require("../config/passport");
 const eachDay = require("date-fns/each_day");
 const format = require("date-fns/format");
 const Event = require("./../models/event");
@@ -12,7 +14,7 @@ const router = express.Router();
 // 	res.json({ message: 'Express is up!' });
 // });
 
-router.post("/create", async (req, res, next) => {
+router.post("/create", passport.authenticate("jwt", { session: false }), async (req, res, next) => {
   try {
     const startDate = getDate(req.body.startDate);
     const endDate = getDate(req.body.endDate);
@@ -33,6 +35,7 @@ router.post("/create", async (req, res, next) => {
 });
 
 module.exports = app => {
+  app.use(passport.initialize());
   app.use(express.json());
   app.use("/events", router);
 };
