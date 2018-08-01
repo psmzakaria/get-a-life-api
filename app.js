@@ -8,6 +8,7 @@ const app = express();
 const indexRouter = require("./routers/index");
 const usersRouter = require("./routers/usersRoute");
 const eventsRouter = require("./routers/eventsRoute");
+const errorHandler = require("./middlewares/errorHandler");
 
 app.use(passport.initialize());
 app.use(express.json());
@@ -27,5 +28,7 @@ if (process.env.NODE_ENV === "production") {
 indexRouter(app);
 usersRouter(app);
 eventsRouter(app);
+
+app.use(errorHandler);
 
 module.exports = app;
