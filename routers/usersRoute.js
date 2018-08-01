@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { passport } = require("../config/passport");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
@@ -30,15 +31,34 @@ router.post("/signin", async (req, res) => {
   if (user.validPassword(password)) {
     const userId = { id: user.id };
     const token = jwt.sign(userId, jwtOptions.secretOrKey);
-    res.status(201).cookie("jwt", token, {
-      httpOnly: true,
-      secure: false
-    }).json({message: "Signed in successfully!"});
+    res
+      .status(201)
+      .cookie("jwt", token, {
+        httpOnly: true,
+        secure: false
+      })
+      .json({ message: "Signed in successfully!" });
   } else {
     res.status(401).json({ message: "passwords did not match" });
   }
 });
+
+//GET only user's name
+router.get(
+  "/:username",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      const findUser = await User.findOne({ username: req.params.username });
+      res.status(200).json({ message: `Welcome ${findUser.username}` });
+    } catch (error) {
+      res.status(404);
+    }
+  }
+);
+
 module.exports = app => {
+  app.use(passport.initialize());
   app.use(express.json());
   app.use("/users", router);
 };

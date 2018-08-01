@@ -70,4 +70,5 @@ test("POST /events/create non-authorised user can't create new event", async () 
   const events = await Event.find();
   
   expect(response.status).toBe(401);
+
 });

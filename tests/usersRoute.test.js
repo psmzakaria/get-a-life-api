@@ -7,8 +7,8 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongod = new MongoMemoryServer();
 const mongoose = require("mongoose");
 
-const app = express();
-usersRouter(app);
+const app = require("../app");
+// usersRouter(app);
 
 const user01 = {
   username: "user01",
@@ -73,4 +73,17 @@ describe("POST /signin", () => {
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("passwords did not match");
   });
+});
+
+test("GET/:username should return back with a status of ", async () => {
+  const agent = request.agent(app);
+  //signup user
+  await agent.post("/users/signup").send(user01);
+
+  // sign in user
+  const responseSignin = await agent.post("/users/signin").send(user01);
+
+  const response = await agent.get("/users/user01");
+
+  expect(response.status).toBe(200);
 });

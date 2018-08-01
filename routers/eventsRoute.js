@@ -14,7 +14,9 @@ const router = express.Router();
 // 	res.json({ message: 'Express is up!' });
 // });
 
-router.post("/create", passport.authenticate("jwt", { session: false }), async (req, res, next) => {
+router.post("/create", 
+  passport.authenticate("jwt", { session: false }), 
+  async (req, res, next) => {
   try {
     const startDate = getDate(req.body.startDate);
     const endDate = getDate(req.body.endDate);
