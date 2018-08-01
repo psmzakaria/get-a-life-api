@@ -1,8 +1,7 @@
-require("dotenv").config();
-const { passport } = require("../config/passport");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
+const { passport } = require("../config/passport");
 const { jwtOptions } = require("../config/passport");
 
 const router = express.Router();
@@ -58,7 +57,5 @@ router.get(
 );
 
 module.exports = app => {
-  app.use(passport.initialize());
-  app.use(express.json());
   app.use("/users", router);
 };

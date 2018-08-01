@@ -1,14 +1,9 @@
-const express = require("express");
 const request = require("supertest");
-
-const usersRouter = require("../routers/usersRoute");
-
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongod = new MongoMemoryServer();
 const mongoose = require("mongoose");
 
 const app = require("../app");
-// usersRouter(app);
 
 const user01 = {
   username: "user01",
@@ -81,7 +76,7 @@ test("GET/:username should return back with a status of ", async () => {
   await agent.post("/users/signup").send(user01);
 
   // sign in user
-  const responseSignin = await agent.post("/users/signin").send(user01);
+  await agent.post("/users/signin").send(user01);
 
   const response = await agent.get("/users/user01");
 

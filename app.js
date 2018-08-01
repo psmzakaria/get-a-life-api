@@ -1,10 +1,17 @@
+require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const { passport } = require("./config/passport");
+
 const app = express();
 const indexRouter = require("./routers/index");
 const usersRouter = require("./routers/usersRoute");
 const eventsRouter = require("./routers/eventsRoute");
+
+app.use(passport.initialize());
+app.use(express.json());
+app.use(cookieParser());
 
 var corsOptions = {
   origin: [/http:\/\/localhost:.*/, /http[s]*:\/\/.*\.herokuapp.com/],
@@ -16,8 +23,6 @@ if (process.env.NODE_ENV === "production") {
 } else {
   app.use(cors(corsOptions));
 }
-app.use(cookieParser());
-app.use(express.json());
 
 indexRouter(app);
 usersRouter(app);
