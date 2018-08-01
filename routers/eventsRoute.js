@@ -3,6 +3,7 @@ const eachDay = require("date-fns/each_day");
 const format = require("date-fns/format");
 const Event = require("./../models/event");
 const User = require("./../models/user");
+const getDate = require("../helpers/getDate");
 
 const router = express.Router();
 
@@ -13,17 +14,8 @@ const router = express.Router();
 
 router.post("/create", async (req, res, next) => {
   try {
-    const startDateArr = req.body.startDate.split("/");
-
-    const startDate = new Date(
-      startDateArr[2],
-      startDateArr[1] - 1,
-      startDateArr[0]
-    );
-
-    const endDateArr = req.body.endDate.split("/");
-
-    const endDate = new Date(endDateArr[2], endDateArr[1] - 1, endDateArr[0]);
+    const startDate = getDate(req.body.startDate);
+    const endDate = getDate(req.body.endDate);
 
     const result = eachDay(startDate, endDate);
 
