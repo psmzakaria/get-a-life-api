@@ -1,29 +1,34 @@
-## To run locally
+# To run locally
 
-Run:
+## Run:
 
 1. Clone and install packages
-```
-git clone https://github.com/derekc2205/get-a-life-api.git
-npm install
-```
+   ```
+   git clone https://github.com/derekc2205/get-a-life-api.git
+   npm install
+   ```
 
 2. Create .env file in root folder and include the following environment variables
-- JWT_Secret
+   - JWT_Secret
 
 3. Start project
-```
-npm run dev
-```
+   ```
+   npm run dev
+   ```
 
-Test watch:
+## Test:
 
-```
-npm run test:watch
-```
+- Test watch:
+  ```
+  npm run test:watch
+  ```
 
-Test coverage:
-
+- Test coverage:
+  ```
+  npm run test:coverage
+  ```
+## Required for Cypress test
+To run Cypress test in `get-a-life` **UI**, it is required to run `get-a-life` **API** in test environment by running
 ```
-npm run test:coverage
+npm run start:e2e
 ```
