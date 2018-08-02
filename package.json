@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:e2e": "npm run clear-test-db && env MONGODB_URI='mongodb://localhost/jumpstart-test' node server.js",
     "dev": "npx nodemon server.js",
     "test": "jest",
     "test:watch": "jest --watch",
