@@ -28,7 +28,7 @@
   npm run test:coverage
   ```
 ## Required for Cypress test
-To run Cypress test in `get-a-life` **UI**, it is required to run `get-a-life` **API** in test environment by running
+To run Cypress test in `get-a-life` **UI**, it is required to run **API** in test environment by running
 ```
 npm run start:e2e
 ```
