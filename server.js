@@ -1,9 +1,12 @@
 const app = require("./app");
 const mongoose = require("mongoose");
 
-const mongodbUri = process.env.MONGODB_URI || "mongodb://localhost/jumpstart";
+const mongodbUri = process.env.MONGODB_URI || "mongodb://localhost:27017/jumpstart";
 
-mongoose.connect(mongodbUri);
+mongoose.connect(
+  mongodbUri,
+  { useNewUrlParser: true }
+);
 const db = mongoose.connection;
 db.on("error", error => {
   console.error("An error occured!", error);
