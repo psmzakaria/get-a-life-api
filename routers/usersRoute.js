@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
 const { passport } = require("../config/passport");
 const { jwtOptions } = require("../config/passport");
+const { authenticateUser } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -43,18 +44,14 @@ router.post("/signin", async (req, res) => {
 });
 
 //GET only user's name
-router.get(
-  "/:username",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res, next) => {
-    try {
-      const findUser = await User.findOne({ username: req.params.username });
-      res.status(200).json({ message: `Welcome ${findUser.username}` });
-    } catch (error) {
-      res.status(404);
-    }
+router.get("/:username", authenticateUser, async (req, res, next) => {
+  try {
+    const findUser = await User.findOne({ username: req.params.username });
+    res.status(200).json({ username: findUser.username} );
+  } catch (error) {
+    res.status(404);
   }
-);
+});
 
 module.exports = app => {
   app.use("/users", router);

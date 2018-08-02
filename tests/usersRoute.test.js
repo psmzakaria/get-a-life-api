@@ -15,7 +15,7 @@ const userNoUsername = {
 };
 
 beforeAll(async () => {
-  jest.setTimeout(120000);
+  jest.setTimeout(12000);
 
   const uri = await mongod.getConnectionString();
   await mongoose.connect(uri);
@@ -81,4 +81,5 @@ test("GET/:username should return back with a status of ", async () => {
   const response = await agent.get("/users/user01");
 
   expect(response.status).toBe(200);
+  expect(response.body.username).toBe("user01");
 });
