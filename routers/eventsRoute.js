@@ -26,7 +26,8 @@ router.post(
         title: req.body.title,
         proposedDates: result.map(date => {
           return format(date, "YYYYMMDD");
-        })
+        }),
+        hostId: req.user._id
       });
       await newEvent.save();
       res.status(201).json();
