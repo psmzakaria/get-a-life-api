@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
+const Event = require("./../models/event")
 const { passport } = require("../config/passport");
 const { jwtOptions } = require("../config/passport");
 const { authenticateUser } = require("../middlewares/auth");
@@ -47,7 +48,10 @@ router.post("/signin", async (req, res) => {
 router.get("/:username", authenticateUser, async (req, res, next) => {
   try {
     const findUser = await User.findOne({ username: req.params.username });
-    res.status(200).json({ username: findUser.username} );
+    const hostedEvents = await Event.find({ hostId: findUser._id });
+    res
+      .status(200)
+      .json({ username: findUser.username, hostedEvents: hostedEvents });
   } catch (error) {
     res.status(404);
   }
