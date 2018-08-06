@@ -90,7 +90,6 @@ router.get("/:username", authenticateUser, async (req, res, next) => {
 
     hostedEvents.forEach(event => {
       const status = getEventStatus(event);
-      console.log(status);
       statuses.push(status);
     });
 
