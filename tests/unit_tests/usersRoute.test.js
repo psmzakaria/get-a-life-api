@@ -68,4 +68,5 @@ test("GET users/:username should return back with a status of ", async () => {
   expect(response.body.username).toBe("user01");
   expect(response.body.hostedEvents.length).toEqual(3);
   expect(response.body.hostedEvents[0].title).toEqual("event1");
+  expect(response.body.hostedEvents[0].hostId.username).toEqual("user01");
 });
