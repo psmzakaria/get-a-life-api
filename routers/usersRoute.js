@@ -1,62 +1,9 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
 const Event = require("./../models/event");
-const { jwtOptions } = require("../config/passport");
 const { authenticateUser } = require("../middlewares/auth");
 const getEventStatus = require("../helpers/getEventStatus");
 const router = express.Router();
-
-const getToken = userId => {
-  return jwt.sign(userId, jwtOptions.secretOrKey);
-};
-
-router.post("/signup", async (req, res, next) => {
-  const { username, password } = req.body;
-  const user = new User({ username });
-  user.setPassword(password);
-  try {
-    const newUser = await user.save();
-    const userId = { id: newUser.id };
-    const token = getToken(userId);
-
-    res
-      .status(201)
-      .cookie("jwt", token, {
-        httpOnly: true,
-        secure: false,
-        maxAge: 30 * 60 * 1000
-      })
-      .json(user.toDisplay());
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.post("/signin", async (req, res) => {
-  const { username, password } = req.body;
-
-  const user = await User.findOne({ username: username });
-
-  if (!user) {
-    res.status(401).json({ message: "no such user found" });
-  }
-
-  if (user.validPassword(password)) {
-    const userId = { id: user.id };
-    const token = getToken(userId);
-    res
-      .status(201)
-      .cookie("jwt", token, {
-        httpOnly: true,
-        secure: false,
-        maxAge: 30 * 60 * 1000
-      })
-      .json({ message: "Signed in successfully!" });
-  } else {
-    res.status(401).json({ message: "passwords did not match" });
-  }
-});
 
 router.get("/findUser", authenticateUser, async (req, res, next) => {
   const users = await User.find();
