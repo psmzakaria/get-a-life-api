@@ -18,11 +18,11 @@ beforeAll(async () => {
   jest.setTimeout(12000);
 
   const uri = await mongod.getConnectionString();
-  await mongoose.connect(uri);
+  await mongoose.connect(uri,{ useNewUrlParser: true });
 });
 
 afterAll(() => {
-  mongoose.disconnect();
+  mongoose.disconnect()
   mongod.stop();
 });
 
@@ -70,16 +70,27 @@ describe("POST /signin", () => {
   });
 });
 
-test("GET/:username should return back with a status of ", async () => {
+test('should return back a username when query matches ', async () => {
   const agent = request.agent(app);
-  //signup user
-  await agent.post("/users/signup").send(user01);
+  // signup user
+  await agent.post('/users/signup').send(user01);
 
   // sign in user
-  await agent.post("/users/signin").send(user01);
+  await agent.post('/users/signin').send(user01);
 
-  const response = await agent.get("/users/user01");
-
+  const response = await agent.get('/users/findUser').query('username=user01');
   expect(response.status).toBe(200);
-  expect(response.body.username).toBe("user01");
+});
+
+test('should return back a user not found when query does not match ', async () => {
+  const agent = request.agent(app);
+  // signup user
+  await agent.post('/users/signup').send(user01);
+
+  // sign in user
+  await agent.post('/users/signin').send(user01);
+
+  const response = await agent.get('/users/findUser').query('username=user02');
+  expect(response.status).toBe(404);
+  expect(response.body.message).toBe('user not found')
 });
