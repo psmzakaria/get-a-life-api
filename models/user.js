@@ -31,6 +31,14 @@ UserSchema.methods.validPassword = function(password) {
   return this.hash === hashPassword(password, this.salt);
 };
 
+UserSchema.methods.toDisplay = function() {
+  let smallObject = {
+    _id: this._id,
+    username: this.username
+  };
+  return smallObject;
+};
+
 const generateSalt = () => {
   return crypto.randomBytes(16).toString("hex");
 };
