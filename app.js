@@ -6,6 +6,7 @@ const { passport } = require("./config/passport");
 
 const app = express();
 const indexRouter = require("./routers/index");
+const accountRouter = require("./routers/accountRoute");
 const usersRouter = require("./routers/usersRoute");
 const eventsRouter = require("./routers/eventsRoute");
 const errorHandler = require("./middlewares/errorHandler");
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 indexRouter(app);
+accountRouter(app);
 usersRouter(app);
 eventsRouter(app);
 
