@@ -44,7 +44,7 @@ beforeAll(async () => {
   jest.setTimeout(12000);
 
   const uri = await mongod.getConnectionString();
-  await mongoose.connect(uri);
+  await mongoose.connect(uri,{ useNewUrlParser: true });
 });
 
 beforeEach(() => {

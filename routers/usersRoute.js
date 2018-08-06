@@ -2,19 +2,32 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
 const Event = require("./../models/event");
-const { passport } = require("../config/passport");
 const { jwtOptions } = require("../config/passport");
 const { authenticateUser } = require("../middlewares/auth");
 const getEventStatus = require("../helpers/getEventStatus");
 const router = express.Router();
+
+const getToken = userId => {
+  return jwt.sign(userId, jwtOptions.secretOrKey);
+};
 
 router.post("/signup", async (req, res, next) => {
   const { username, password } = req.body;
   const user = new User({ username });
   user.setPassword(password);
   try {
-    await user.save();
-    res.status(201).json({ user });
+    const newUser = await user.save();
+    const userId = { id: newUser.id };
+    const token = getToken(userId);
+
+    res
+      .status(201)
+      .cookie("jwt", token, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 30 * 60 * 1000
+      })
+      .json(user.toDisplay());
   } catch (err) {
     next(err);
   }
@@ -31,12 +44,13 @@ router.post("/signin", async (req, res) => {
 
   if (user.validPassword(password)) {
     const userId = { id: user.id };
-    const token = jwt.sign(userId, jwtOptions.secretOrKey);
+    const token = getToken(userId);
     res
       .status(201)
       .cookie("jwt", token, {
         httpOnly: true,
-        secure: false
+        secure: false,
+        maxAge: 30 * 60 * 1000
       })
       .json({ message: "Signed in successfully!" });
   } else {
@@ -44,6 +58,25 @@ router.post("/signin", async (req, res) => {
   }
 });
 
+router.get("/findUser", authenticateUser, async (req, res, next) => {
+  const users = await User.find();
+  const queryUsername = req.query.username;
+
+  if (queryUsername === undefined) {
+    res.status(200).json({ message: "no username query parameter" });
+  } else {
+    const queryUsernameLower = queryUsername.toLowerCase();
+    const foundUser = users.filter(
+      user => user.username.toLowerCase() === queryUsernameLower
+    )[0];
+
+    if (foundUser === undefined) {
+      res.status(404).json({ message: "user not found" });
+    } else {
+      res.status(200).json({ message: "user found" });
+    }
+  }
+});
 //GET only user's name
 router.get("/:username", authenticateUser, async (req, res, next) => {
   try {
