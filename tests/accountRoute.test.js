@@ -46,11 +46,10 @@ describe("POST /signup", () => {
       });
 
     const users = await User.find({ username: "testuser" });
-    const cookies = response.headers["set-cookie"];
 
     expect(response.status).toBe(201);
     expect(users.length).toBe(1);
-    expect(cookies).toBeDefined();
+    expect(response.headers["set-cookie"]).toBeDefined();
     expect(Object.keys(response.body).length).toBe(2);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -100,6 +99,7 @@ describe("POST /signin", () => {
       .send(existingUser);
 
     expect(response.status).toBe(200);
+    expect(response.headers["set-cookie"]).toBeDefined();
   });
 
   test("should return a status of 401 with an existing username but false password", async () => {
