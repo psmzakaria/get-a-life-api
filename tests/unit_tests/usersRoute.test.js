@@ -1,3 +1,4 @@
+// note: test have been merged, obsolete file curr just for ref.
 require("dotenv").config();
 const request = require("supertest");
 const express = require("express");
