@@ -5,7 +5,7 @@ const Event = require("./../models/event");
 const { passport } = require("../config/passport");
 const { jwtOptions } = require("../config/passport");
 const { authenticateUser } = require("../middlewares/auth");
-
+const getEventStatus = require("../helpers/getEventStatus");
 const router = express.Router();
 
 router.post("/signup", async (req, res, next) => {
@@ -53,9 +53,19 @@ router.get("/:username", authenticateUser, async (req, res, next) => {
       select: "username"
     });
 
-    res
-      .status(200)
-      .json({ username: findUser.username, hostedEvents: hostedEvents });
+    const statuses = [];
+
+    hostedEvents.forEach(event => {
+      const status = getEventStatus(event);
+      console.log(status);
+      statuses.push(status);
+    });
+
+    res.status(200).json({
+      username: findUser.username,
+      hostedEvents: hostedEvents,
+      statuses: statuses
+    });
   } catch (error) {
     res.status(404);
   }

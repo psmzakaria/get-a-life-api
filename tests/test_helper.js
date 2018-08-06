@@ -32,7 +32,9 @@ const saveNewEvent = async (event,hostId) => {
     const newEvent = new Event({
       title: event.title,
       proposedDates: getProposedDates(event.startDate, event.endDate),
-      hostId: hostId
+      hostId: hostId,
+      matchedDates: event.matchedDates,
+      selectedDate: event.selectedDate
     });
     const savedEvent = await newEvent.save();
     return savedEvent._id
