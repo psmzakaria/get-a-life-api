@@ -47,7 +47,7 @@ beforeAll(async () => {
   await mongoose.connect(uri);
 });
 
-beforeEach( () => {
+beforeEach(() => {
   mongoose.connection.db.dropDatabase();
 });
 
@@ -56,7 +56,7 @@ afterAll(() => {
   mongod.stop();
 });
 
-test("GET users/:username should return back with a status of ", async () => {
+test("GET users/:username should return correct event details ", async () => {
   const user1Id = await saveNewUser(user01);
   await saveNewEvent(event1, user1Id);
   await saveNewEvent(event2, user1Id);
@@ -73,27 +73,23 @@ test("GET users/:username should return back with a status of ", async () => {
   expect(response.body.hostedEvents.length).toEqual(3);
   expect(response.body.hostedEvents[0].title).toEqual("event1");
   expect(response.body.hostedEvents[0].hostId.username).toEqual("user01");
-  expect(response.body.statuses[0]).toEqual("Pending for reply");
 });
 
-test("GET users/:username - events with matchedDates should return pending for host reply ", async () => {
+test("GET users/:username -should provide correct status body ", async () => {
   const user1Id = await saveNewUser(user01);
-  const event4 = {startDate: "06082018", endDate: "07082018", matchedDates: ["06082018", "07082018"] };
+  const event4 = {
+    startDate: "06082018",
+    endDate: "07082018",
+    matchedDates: ["06082018", "07082018"]
+  };
+  const event5 = {
+    startDate: "06082018",
+    endDate: "07082018",
+    matchedDates: ["06082018", "07082018"],
+    selectedDate: "06082018"
+  };
+  await saveNewEvent(event3, user1Id);
   await saveNewEvent(event4, user1Id);
-  mockAuthenticateUser.mockImplementation((req, res, next) => {
-    next();
-  });
-
-  const agent = request.agent(app);
-  const response = await agent.get("/users/user01");
-  console.log(response.body)
-
-  expect(response.body.statuses[0]).toEqual("Pending for host reply");
-});
-
-test("GET users/:username - events with matchedDates and selectedDates should return pending for host reply ", async () => {
-  const user1Id = await saveNewUser(user01);
-  const event5 = {startDate: "06082018", endDate: "07082018", matchedDates: ["06082018", "07082018"], selectedDate: "06082018" };
   await saveNewEvent(event5, user1Id);
   mockAuthenticateUser.mockImplementation((req, res, next) => {
     next();
@@ -101,7 +97,8 @@ test("GET users/:username - events with matchedDates and selectedDates should re
 
   const agent = request.agent(app);
   const response = await agent.get("/users/user01");
-  console.log(response.body)
 
-  expect(response.body.statuses[0]).toEqual("06082018");
+  expect(response.body.statuses[0]).toEqual("Pending for reply");
+  expect(response.body.statuses[1]).toEqual("Pending for host reply");
+  expect(response.body.statuses[2]).toEqual("06082018");
 });
