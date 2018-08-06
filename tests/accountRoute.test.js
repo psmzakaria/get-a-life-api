@@ -1,40 +1,19 @@
 const request = require("supertest");
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const mongod = new MongoMemoryServer();
-const mongoose = require("mongoose");
-
 const User = require("../models/user");
 const app = require("../app");
+const {
+  existingUser,
+  addMockUser,
+  setUpMongoose,
+  tearDownMongoose,
+  dropDatabase
+} = require("../utilities/testUtils");
 
-beforeAll(async () => {
-  jest.setTimeout(10000);
+beforeAll(setUpMongoose);
+afterAll(tearDownMongoose);
 
-  const uri = await mongod.getConnectionString();
-  await mongoose.connect(
-    uri,
-    { useNewUrlParser: true }
-  );
-});
-
-afterAll(() => {
-  mongoose.disconnect();
-  mongod.stop();
-});
-
-const existingUser = {
-  username: "john",
-  password: "password"
-};
-
-beforeEach(async () => {
-  const user = new User({ username: existingUser.username });
-  user.setPassword(existingUser.password);
-  await user.save();
-});
-
-afterEach(async () => {
-  await User.remove();
-});
+beforeEach(addMockUser);
+afterEach(dropDatabase);
 
 describe("POST /signup", () => {
   test("should return response status 201 and store in database if request body is valid", async () => {
