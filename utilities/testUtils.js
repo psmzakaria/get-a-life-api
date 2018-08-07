@@ -58,7 +58,10 @@ const mongoose = require("mongoose");
 const setUpMongoose = async () => {
   jest.setTimeout(10000);
   const uri = await mongod.getConnectionString();
-  await mongoose.connect(uri);
+  await mongoose.connect(
+    uri,
+    { useNewUrlParser: true }
+  );
 };
 
 const tearDownMongoose = async () => {
@@ -67,7 +70,7 @@ const tearDownMongoose = async () => {
 };
 
 const dropDatabase = async () => {
-  mongoose.connection.db.dropDatabase();
+  await mongoose.connection.db.dropDatabase();
 };
 
 module.exports = {
