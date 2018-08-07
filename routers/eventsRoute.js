@@ -7,10 +7,21 @@ const getDate = require("../helpers/getDate");
 
 const router = express.Router();
 
-// router.get('/', (req, res) => {
-// 	console.log(req.user);
-// 	res.json({ message: 'Express is up!' });
-// });
+router.get("/:id", async (req, res, next) => {
+  const eventId = req.params.id;
+  try {
+    const event = await Event.findById(eventId);
+
+    res.json({
+      payload: event
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      error.status = 400;
+    }
+    next(error);
+  }
+});
 
 router.post(
   "/create",
