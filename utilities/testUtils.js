@@ -26,6 +26,11 @@ const testEvents = [
     endDate: "07082018",
     matchedDates: ["06082018", "07082018"],
     selectedDate: "06082018"
+  },
+  {
+    title: "put attendee",
+    attendee: []
+
   }
 ];
 
