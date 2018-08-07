@@ -3,6 +3,7 @@ const User = require("./user");
 
 const EventSchema = new mongoose.Schema({
   title: String,
+  description: String,
   hostId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
