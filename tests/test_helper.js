@@ -23,24 +23,24 @@ const saveNewUser = async user => {
 };
 
 const getProposedDates = (sDate, eDate) => {
-    const startDate = getDate(sDate)
-    const endDate = getDate(eDate)
-    const result = eachDay(startDate, endDate);
-    return result.map(date => {
-        return format(date, "YYYYMMDD");
-      })
-}
+  const startDate = getDate(sDate);
+  const endDate = getDate(eDate);
+  const result = eachDay(startDate, endDate);
+  return result.map(date => {
+    return format(date, "YYYYMMDD");
+  });
+};
 
-const saveNewEvent = async (event,hostId) => {
-    const newEvent = new Event({
-      title: event.title,
-      proposedDates: getProposedDates(event.startDate, event.endDate),
-      hostId: hostId,
-      matchedDates: event.matchedDates,
-      selectedDate: event.selectedDate
-    });
-    const savedEvent = await newEvent.save();
-    return savedEvent._id
+const saveNewEvent = async (event, hostId) => {
+  const newEvent = new Event({
+    title: event.title,
+    proposedDates: getProposedDates(event.startDate, event.endDate),
+    hostId: hostId,
+    matchedDates: event.matchedDates,
+    selectedDate: event.selectedDate
+  });
+  const savedEvent = await newEvent.save();
+  return savedEvent._id;
 };
 
 module.exports = {
