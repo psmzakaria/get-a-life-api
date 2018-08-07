@@ -40,8 +40,9 @@ router.post(
         }),
         hostId: req.user._id
       });
-      await newEvent.save();
-      res.status(201).json();
+      const event = await newEvent.save();
+
+      res.status(201).json(event);
     } catch (error) {
       next(error);
     }
