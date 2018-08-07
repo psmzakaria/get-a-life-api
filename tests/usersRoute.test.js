@@ -1,6 +1,5 @@
 const request = require('supertest');
 const app = require('../app');
-const { saveNewUser } = require('./test_helper');
 
 const { setUpMongoose, tearDownMongoose, addMockUser, existingUser, addTestEvents } = require('../utilities/testUtils');
 
@@ -11,16 +10,17 @@ beforeAll(async () => {
 });
 afterAll(tearDownMongoose);
 
-// describe("GET /users/all", () => {
-//   test("should return all username", async () => {
-//     const agent = request.agent(app)
-//     await agent.get("/users/all")
+describe('GET /users/all', () => {
+	test('should return all username', async () => {
+		const agent = request.agent(app);
+		await agent.post('/account/signin').send(existingUser);
+		const response = await agent.get('/users/all');
 
-//     expect(response.status).toBe(200)
-//     expect(response.body.username[0]).toBe("user01")
-
-//   })
-// })
+		expect(response.status).toBe(200);
+		expect(response.body.allUsernames.length).toBe(1);
+		expect(response.body.allUsernames[0].username).toBe(existingUser.username);
+	});
+});
 
 describe('GET /users/findUser', () => {
 	test('should return back a username when query matches ', async () => {

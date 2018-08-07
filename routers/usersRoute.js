@@ -5,8 +5,14 @@ const { authenticateUser } = require('../middlewares/auth');
 const getEventStatus = require('../helpers/getEventStatus');
 const router = express.Router();
 
-
-
+router.get('/all', authenticateUser, async (req, res, next) => {
+	try {
+		const allUsernames = await User.find().select('username -_id');
+		res.status(200).json({ allUsernames });
+	} catch (error) {
+		res.status(404).json({ message: 'Not found' });
+	}
+});
 
 // obsolete for now
 router.post('/findUser', authenticateUser, async (req, res, next) => {
