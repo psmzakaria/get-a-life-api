@@ -5,6 +5,9 @@ const eachDay = require("date-fns/each_day");
 const getDate = require("../helpers/getDate");
 const format = require("date-fns/format");
 
+// Add event listener to log unhandledRejections
+process.on("unhandledRejection", r => console.log(r));
+
 const saveNewUser = async user => {
   const { username } = user;
   const newUser = new User({

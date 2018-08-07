@@ -2,6 +2,9 @@
 const User = require("../models/user");
 const Event = require("../models/event");
 
+// Add event listener to log unhandledRejections
+process.on("unhandledRejection", r => console.log(r));
+
 const existingUser = {
   username: "john",
   password: "password"
