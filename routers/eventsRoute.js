@@ -1,54 +1,50 @@
-const express = require("express");
-const { passport } = require("../config/passport");
-const eachDay = require("date-fns/each_day");
-const format = require("date-fns/format");
-const Event = require("./../models/event");
-const getDate = require("../helpers/getDate");
+const express = require('express');
+const { passport } = require('../config/passport');
+const eachDay = require('date-fns/each_day');
+const format = require('date-fns/format');
+const Event = require('./../models/event');
+const getDate = require('../helpers/getDate');
 
 const router = express.Router();
 
-router.get("/:id", async (req, res, next) => {
-  const eventId = req.params.id;
-  try {
-    const event = await Event.findById(eventId);
+router.post('/create', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+	try {
+		const startDate = getDate(req.body.startDate);
+		const endDate = getDate(req.body.endDate);
 
-    res.json({
-      payload: event
-    });
-  } catch (error) {
-    if (error.name === "CastError") {
-      error.status = 400;
-    }
-    next(error);
-  }
+		const result = eachDay(startDate, endDate);
+
+		const newEvent = new Event({
+			title: req.body.title,
+			proposedDates: result.map((date) => {
+				return format(date, 'YYYYMMDD');
+			}),
+			hostId: req.user._id
+		});
+		const event = await newEvent.save();
+
+		res.status(201).json(event);
+	} catch (error) {
+		next(error);
+	}
 });
 
-router.post(
-  "/create",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res, next) => {
-    try {
-      const startDate = getDate(req.body.startDate);
-      const endDate = getDate(req.body.endDate);
+router.get('/:id', async (req, res, next) => {
+	const eventId = req.params.id;
+	try {
+		const event = await Event.findById(eventId);
 
-      const result = eachDay(startDate, endDate);
+		res.json({
+			payload: event
+		});
+	} catch (error) {
+		if (error.name === 'CastError') {
+			error.status = 400;
+		}
+		next(error);
+	}
+});
 
-      const newEvent = new Event({
-        title: req.body.title,
-        proposedDates: result.map(date => {
-          return format(date, "YYYYMMDD");
-        }),
-        hostId: req.user._id
-      });
-      const event = await newEvent.save();
-
-      res.status(201).json(event);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-module.exports = app => {
-  app.use("/events", router);
+module.exports = (app) => {
+	app.use('/events', router);
 };
