@@ -44,7 +44,14 @@ router.get("/:username", authenticateUser, async (req, res, next) => {
     });
 
     const invitedEvents = await Event.find({
-      attendees: { $elemMatch: { userId: findUser._id } }
+      attendees: { $elemMatch: { userId: findUser._id, status: "pending" } }
+    }).populate({
+      path: "hostId",
+      select: "username"
+    });
+
+    const acceptedEvents = await Event.find({
+      attendees: { $elemMatch: { userId: findUser._id, status: "accepted" } }
     }).populate({
       path: "hostId",
       select: "username"
@@ -61,6 +68,7 @@ router.get("/:username", authenticateUser, async (req, res, next) => {
       username: findUser.username,
       hostedEvents: hostedEvents,
       invitedEvents: invitedEvents,
+      acceptedEvents: acceptedEvents,
       statuses: statuses
     });
   } catch (error) {

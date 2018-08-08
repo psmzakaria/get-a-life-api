@@ -28,8 +28,8 @@ const init = async () => {
   guest.setPassword("password");
   const newGuest = await guest.save();
 
-  const event = new Event({
-    title: "Test Event",
+  const event1 = new Event({
+    title: "Test Event1",
     hostId: newHost._id,
     proposedDates: ["13082018", "14082018", "15082018"],
     attendees: [
@@ -40,7 +40,22 @@ const init = async () => {
     ]
   });
 
-  const newEvent = await event.save();
+  
+  const event2 = new Event({
+    title: "Test Event2 with acceptance",
+    hostId: newHost._id,
+    proposedDates: ["13082018", "14082018", "15082018"],
+    attendees: [
+      {
+        userId: newGuest._id,
+        status: "accepted"
+      }
+    ]
+  });
+
+
+  const newEvent1 = await event1.save();
+  const newEvent2 = await event2.save();
 
   console.log("DONE INIT");
 };

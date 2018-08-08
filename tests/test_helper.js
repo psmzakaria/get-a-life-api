@@ -43,7 +43,31 @@ const saveNewEvent = async (event, hostId) => {
   return savedEvent._id;
 };
 
+const saveNewEventWithGuest = async (event, hostId, attendees) => {
+  const newEvent = new Event({
+    title: event.title,
+    proposedDates: getProposedDates(event.startDate, event.endDate),
+    hostId: hostId,
+    matchedDates: event.matchedDates,
+    selectedDate: event.selectedDate,
+    attendees: attendees
+  });
+  const savedEvent = await newEvent.save();
+  return savedEvent._id;
+};
+
+const loginAs = async (app, user) => {
+  let response = await request(app)
+    .post("/account/signin")
+    .send(user);
+
+  expect(response.statusCode).toBe(200);
+  return response.body.user;
+}
+
 module.exports = {
   saveNewUser,
-  saveNewEvent
+  saveNewEvent,
+  saveNewEventWithGuest,
+  loginAs
 };
