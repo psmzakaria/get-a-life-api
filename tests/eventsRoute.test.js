@@ -7,9 +7,9 @@ const {
   tearDownMongoose,
   addTestUser,
   addTestEvents,
-  existingUser,
   saveNewUser
 } = require("./testUtils");
+const { TEST_USER } = require("./testData");
 
 beforeAll(async () => {
   await setUpMongoose();
@@ -28,13 +28,13 @@ describe("POST /events/create", () => {
     };
 
     const agent = request.agent(app);
-    await agent.post("/account/signin").send(existingUser);
+    await agent.post("/account/signin").send(TEST_USER);
 
     const originalEventsLength = (await Event.find()).length;
     const response = await agent.post("/events/create").send(newEvent);
 
     const events = await Event.find();
-    const user = await User.findOne({ username: existingUser.username });
+    const user = await User.findOne({ username: TEST_USER.username });
 
     expect(response.status).toBe(201);
     expect(events.length).toEqual(originalEventsLength + 1);
@@ -67,7 +67,7 @@ describe("POST /events/create", () => {
       attendees: [user1.username, user2.username]
     };
     const agent = request.agent(app);
-    await agent.post("/account/signin").send(existingUser);
+    await agent.post("/account/signin").send(TEST_USER);
     const response = await agent.post("/events/create").send(newEvent);
 
     expect(response.status).toBe(201);
@@ -112,12 +112,12 @@ describe("GET /events/:id", () => {
 //     const agent = request.agent(app);
 //     const event = await Event.findOne({title: "put attendee"})
 //     const id = event._id
-//     const response = await agent.put(`/events/${id}/attendees`).send([existingUser.username])
+//     const response = await agent.put(`/events/${id}/attendees`).send([TEST_USER.username])
 
 //     expect(response.status).toBe(201)
 //     const amendedEvent = await Event.findOne({title: "put attendee"})
 //     expect(amendedEvent.attendees.length).toBe(1)
-//     expect(amendedEvent.attendees[0].username).toBe(existingUser.username)
+//     expect(amendedEvent.attendees[0].username).toBe(TEST_USER.username)
 //   })
 
 // })

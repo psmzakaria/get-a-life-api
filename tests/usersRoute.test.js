@@ -8,6 +8,7 @@ const {
   saveNewUser,
   saveNewEventWithGuest
 } = require("./testUtils");
+const { TEST_USER } = require("./testData");
 
 beforeAll(async () => {
   await setUpMongoose();
@@ -19,30 +20,30 @@ afterAll(tearDownMongoose);
 describe("GET /users/all", () => {
   test("should return all username", async () => {
     const agent = request.agent(app);
-    await agent.post("/account/signin").send(existingUser);
+    await agent.post("/account/signin").send(TEST_USER);
     const response = await agent.get("/users/all");
 
     expect(response.status).toBe(200);
     expect(response.body.allUsernames.length).toBe(1);
-    expect(response.body.allUsernames[0].username).toBe(existingUser.username);
+    expect(response.body.allUsernames[0].username).toBe(TEST_USER.username);
   });
 });
 
 describe("GET /users/findUser", () => {
   test("should return back a username when query matches ", async () => {
     const agent = request.agent(app);
-    await agent.post("/account/signin").send(existingUser);
+    await agent.post("/account/signin").send(TEST_USER);
 
     const response = await agent
       .post("/users/findUser")
-      .send({ username: existingUser.username });
+      .send({ username: TEST_USER.username });
 
     expect(response.status).toBe(200);
   });
 
   test("should return back a user not found when query does not match ", async () => {
     const agent = request.agent(app);
-    await agent.post("/account/signin").send(existingUser);
+    await agent.post("/account/signin").send(TEST_USER);
 
     const response = await agent
       .post("/users/findUser")
@@ -56,8 +57,8 @@ describe("GET /users/findUser", () => {
 describe("GET users/:username", () => {
   test("should provide correct status body", async () => {
     const agent = request.agent(app);
-    await agent.post("/account/signin").send(existingUser);
-    const response = await agent.get(`/users/${existingUser.username}`);
+    await agent.post("/account/signin").send(TEST_USER);
+    const response = await agent.get(`/users/${TEST_USER.username}`);
 
     expect(response.status).toBe(200);
     expect(Object.keys(response.body).length).toBe(5);

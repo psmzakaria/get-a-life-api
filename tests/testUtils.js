@@ -4,6 +4,7 @@ const Event = require("../models/event");
 const eachDay = require("date-fns/each_day");
 const getDate = require("../helpers/getDate");
 const format = require("date-fns/format");
+const { TEST_EVENTS, TEST_USER } = require("./testData");
 
 // Add event listener to log unhandledRejections
 process.on("unhandledRejection", r => console.log(r));
@@ -52,46 +53,16 @@ const saveNewEventWithGuest = async (event, hostId, attendees) => {
   return savedEvent._id;
 };
 
-/**** MOCK DATA ****/
-
-const existingUser = {
-  username: "john",
-  password: "password"
-};
-
-const testEvents = [
-  {
-    title: "event2",
-    startDate: "13/07/2018",
-    endDate: "19/07/2018"
-  },
-  {
-    startDate: "06082018",
-    endDate: "07082018",
-    matchedDates: ["06082018", "07082018"]
-  },
-  {
-    startDate: "06082018",
-    endDate: "07082018",
-    matchedDates: ["06082018", "07082018"],
-    selectedDate: "06082018"
-  },
-  {
-    title: "put attendee",
-    attendee: []
-  }
-];
-
 const addTestUser = async () => {
-  const user = new User({ username: existingUser.username });
-  user.setPassword(existingUser.password);
+  const user = new User({ username: TEST_USER.username });
+  user.setPassword(TEST_USER.password);
   await user.save();
 };
 
 const addTestEvents = async () => {
-  const user = await User.findOne({ username: existingUser.username });
+  const user = await User.findOne({ username: TEST_USER.username });
 
-  testEvents.forEach(async event => {
+  TEST_EVENTS.forEach(async event => {
     const newEvent = new Event({
       title: event.title,
       hostId: user._id,
@@ -127,8 +98,6 @@ const dropDatabase = async () => {
 };
 
 module.exports = {
-  existingUser,
-  testEvents,
   addTestUser,
   addTestEvents,
   setUpMongoose,

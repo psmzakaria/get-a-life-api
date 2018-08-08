@@ -2,12 +2,12 @@ const request = require("supertest");
 const User = require("../models/user");
 const app = require("../app");
 const {
-  existingUser,
   addTestUser,
   setUpMongoose,
   tearDownMongoose,
   dropDatabase
 } = require("./testUtils");
+const { TEST_USER } = require("./testData");
 
 beforeAll(setUpMongoose);
 afterAll(tearDownMongoose);
@@ -41,7 +41,7 @@ describe("POST /signup", () => {
   test("should return response status 400 if username already exists", async () => {
     const response = await request(app)
       .post("/account/signup")
-      .send(existingUser);
+      .send(TEST_USER);
 
     expect(response.status).toBe(400);
   });
@@ -75,7 +75,7 @@ describe("POST /signin", () => {
   test("should return a status of 201 with valid username and password", async () => {
     const response = await request(app)
       .post("/account/signin")
-      .send(existingUser);
+      .send(TEST_USER);
 
     expect(response.status).toBe(200);
     expect(response.headers["set-cookie"]).toBeDefined();
@@ -85,7 +85,7 @@ describe("POST /signin", () => {
     const response = await request(app)
       .post("/account/signin")
       .send({
-        username: existingUser.username,
+        username: TEST_USER.username,
         password: "wrong password"
       });
 
