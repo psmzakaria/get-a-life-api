@@ -4,14 +4,14 @@ const app = require("../app");
 const {
   setUpMongoose,
   tearDownMongoose,
-  addMockUser,
+  addTestUser,
   existingUser,
   addTestEvents
-} = require("../utilities/testUtils");
+} = require("./testUtils");
 
 beforeAll(async () => {
   await setUpMongoose();
-  await addMockUser();
+  await addTestUser();
   await addTestEvents();
 });
 afterAll(tearDownMongoose);

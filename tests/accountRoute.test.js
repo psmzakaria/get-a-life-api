@@ -3,16 +3,16 @@ const User = require("../models/user");
 const app = require("../app");
 const {
   existingUser,
-  addMockUser,
+  addTestUser,
   setUpMongoose,
   tearDownMongoose,
   dropDatabase
-} = require("../utilities/testUtils");
+} = require("./testUtils");
 
 beforeAll(setUpMongoose);
 afterAll(tearDownMongoose);
 
-beforeEach(addMockUser);
+beforeEach(addTestUser);
 afterEach(dropDatabase);
 
 describe("POST /signup", () => {
