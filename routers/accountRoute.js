@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/user");
 const { jwtOptions } = require("../config/passport");
+const { COOKIE_CONFIGURATION } = require("../config/cookies");
 
 const router = express.Router();
 router.use(express.json());
@@ -24,11 +25,7 @@ router.post("/signup", async (req, res, next) => {
 
     res
       .status(201)
-      .cookie("jwt", token, {
-        httpOnly: true,
-        secure: false,
-        maxAge: 30 * 60 * 1000
-      })
+      .cookie("jwt", token, COOKIE_CONFIGURATION)
       .json(user.toDisplay());
   } catch (err) {
     next(err);
@@ -49,11 +46,7 @@ router.post("/signin", async (req, res, next) => {
     const token = jwt.sign(userId, jwtOptions.secretOrKey);
 
     res
-      .cookie("jwt", token, {
-        httpOnly: true,
-        secure: false,
-        maxAge: 30 * 60 * 1000
-      })
+      .cookie("jwt", token, COOKIE_CONFIGURATION)
       .json({ message: "Signed in successfully!" });
   } else {
     res.status(401).json({ message: "passwords did not match" });
