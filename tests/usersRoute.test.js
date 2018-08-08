@@ -1,18 +1,13 @@
 const request = require("supertest");
 const app = require("../app");
-
 const {
   setUpMongoose,
   tearDownMongoose,
   addTestUser,
-  existingUser,
-  addTestEvents
-} = require("./testUtils");
-
-const {
+  addTestEvents,
   saveNewUser,
   saveNewEventWithGuest
-} = require("./test_helper");
+} = require("./testUtils");
 
 beforeAll(async () => {
   await setUpMongoose();

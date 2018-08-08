@@ -15,10 +15,6 @@ const saveNewUser = async user => {
   });
   newUser.setPassword(user.password);
   const savedUser = await newUser.save();
-  //   const userId = {id: savedUser._id}
-  //   const token = jwt.sign(userId, jwtOptions.secretOrKey)
-  //   const userInfo = {username: savedUser._id, token: token}
-  //   return userInfo
   return savedUser._id;
 };
 
@@ -38,6 +34,19 @@ const saveNewEvent = async (event, hostId) => {
     hostId: hostId,
     matchedDates: event.matchedDates,
     selectedDate: event.selectedDate
+  });
+  const savedEvent = await newEvent.save();
+  return savedEvent._id;
+};
+
+const saveNewEventWithGuest = async (event, hostId, attendees) => {
+  const newEvent = new Event({
+    title: event.title,
+    proposedDates: getProposedDates(event.startDate, event.endDate),
+    hostId: hostId,
+    matchedDates: event.matchedDates,
+    selectedDate: event.selectedDate,
+    attendees: attendees
   });
   const savedEvent = await newEvent.save();
   return savedEvent._id;
@@ -126,5 +135,6 @@ module.exports = {
   tearDownMongoose,
   dropDatabase,
   saveNewUser,
-  saveNewEvent
+  saveNewEvent,
+  saveNewEventWithGuest
 };
