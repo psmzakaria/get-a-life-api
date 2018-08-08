@@ -9,7 +9,7 @@ const indexRouter = require("./routers/index");
 const accountRouter = require("./routers/accountRoute");
 const usersRouter = require("./routers/usersRoute");
 const eventsRouter = require("./routers/eventsRoute");
-const errorHandler = require("./middlewares/errorHandler");
+const { errorHandler } = require("./middlewares/errorHandler");
 
 app.use(passport.initialize());
 app.use(express.json());

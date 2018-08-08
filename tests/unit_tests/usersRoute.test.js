@@ -7,7 +7,7 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongod = new MongoMemoryServer();
 const mongoose = require("mongoose");
 
-const { saveNewUser, saveNewEvent } = require("../test_helper");
+const { saveNewUser, saveNewEvent } = require("../testUtils");
 
 const mockAuthenticateUser = jest.fn();
 jest.doMock("../../middlewares/auth", () => {
@@ -45,7 +45,10 @@ beforeAll(async () => {
   jest.setTimeout(12000);
 
   const uri = await mongod.getConnectionString();
-  await mongoose.connect(uri,{ useNewUrlParser: true });
+  await mongoose.connect(
+    uri,
+    { useNewUrlParser: true }
+  );
 });
 
 beforeEach(() => {
