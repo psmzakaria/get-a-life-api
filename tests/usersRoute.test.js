@@ -11,9 +11,7 @@ const {
 
 const {
   saveNewUser,
-  saveNewEvent,
-  saveNewEventWithGuest,
-  loginAs
+  saveNewEventWithGuest
 } = require("./test_helper");
 
 beforeAll(async () => {

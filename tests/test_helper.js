@@ -56,18 +56,8 @@ const saveNewEventWithGuest = async (event, hostId, attendees) => {
   return savedEvent._id;
 };
 
-const loginAs = async (app, user) => {
-  let response = await request(app)
-    .post("/account/signin")
-    .send(user);
-
-  expect(response.statusCode).toBe(200);
-  return response.body.user;
-}
-
 module.exports = {
   saveNewUser,
   saveNewEvent,
-  saveNewEventWithGuest,
-  loginAs
+  saveNewEventWithGuest
 };
