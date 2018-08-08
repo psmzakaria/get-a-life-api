@@ -15,21 +15,23 @@ router.post('/create', passport.authenticate('jwt', { session: false }), async (
 
 		const result = eachDay(startDate, endDate);
 
-		// const attendees = req.body.attendees.map(async (attendee) => {
-		// 	const attendeeData = await User.findOne({ username: attendee });
-
-		// 	return attendeeData;
-		// });
-
-		// console.log(await Promise.all(attendees));
+		const attendeesPromise = req.body.attendees.map(async (attendee) => {
+			const attendeeData = await User.findOne({ username: attendee });
+			return {
+				userId: attendeeData._id,
+				status: 'pending'
+			};
+		});
+		const attendees = await Promise.all(attendeesPromise);
 
 		const newEvent = new Event({
 			title: req.body.title,
 			proposedDates: result.map((date) => {
 				return format(date, 'YYYYMMDD');
 			}),
-			hostId: req.user._id
-			// attendees: attendees
+			hostId: req.user._id,
+			description: req.body.description,
+			attendees: attendees
 		});
 		const event = await newEvent.save();
 

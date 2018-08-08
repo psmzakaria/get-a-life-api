@@ -18,7 +18,8 @@ describe('POST /events/create', () => {
 		const newEvent = {
 			title: 'get a life',
 			startDate: '13/07/2018',
-			endDate: '15/07/2018'
+			endDate: '15/07/2018',
+			attendees: []
 		};
 
 		const agent = request.agent(app);
@@ -49,11 +50,11 @@ describe('POST /events/create', () => {
 		expect(response.status).toBe(401);
 	});
 
-	test.skip('should save attendees properly', async () => {
+	test('should save attendees properly', async () => {
 		const user1 = { username: 'user1', password: '000000' };
 		const user2 = { username: 'user2', password: '000000' };
-		let user1Id = saveNewUser(user1);
-		let user2Id = saveNewUser(user2);
+		let user1Id = await saveNewUser(user1);
+		let user2Id = await saveNewUser(user2);
 		const newEvent = {
 			title: 'event 1',
 			startDate: '13/07/2018',
@@ -66,7 +67,7 @@ describe('POST /events/create', () => {
 
 		expect(response.status).toBe(201);
 		expect(response.body.attendees.length).toBe(2);
-		expect(response.body.attendees[0].userId).toBe(user1Id);
+		expect(response.body.attendees[0].userId).toContain(user1Id);
 	});
 });
 
