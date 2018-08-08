@@ -9,6 +9,13 @@ const {
   addTestEvents
 } = require("../utilities/testUtils");
 
+const {
+  saveNewUser,
+  saveNewEvent,
+  saveNewEventWithGuest,
+  loginAs
+} = require("./test_helper");
+
 beforeAll(async () => {
   await setUpMongoose();
   await addMockUser();
@@ -60,7 +67,7 @@ describe("GET users/:username", () => {
     const response = await agent.get(`/users/${existingUser.username}`);
 
     expect(response.status).toBe(200);
-    expect(Object.keys(response.body).length).toBe(4);
+    expect(Object.keys(response.body).length).toBe(5);
     expect(response.body).toEqual(
       expect.objectContaining({
         username: expect.any(String),
@@ -76,5 +83,32 @@ describe("GET users/:username", () => {
 
     const response = await agent.get("/users/user01");
     expect(response.status).toBe(401);
+  });
+
+  test("should provide invitedEvents with status pending and acceptedEvents with status accepted", async () => {
+    const hostUser = { username: "host", password: "000000" };
+    const guestUser = { username: "guest", password: "000000" };
+    const hostId = await saveNewUser(hostUser);
+    const guestId = await saveNewUser(guestUser);
+    const eventWithGuest = {
+      title: "get a life",
+      startDate: "13/07/2018",
+      endDate: "15/07/2018"
+    };
+    const pendingAttendee = [{ userId: guestId, status: "pending" }];
+    const acceptedAttendee = [{ userId: guestId, status: "accepted" }];
+    await saveNewEventWithGuest(eventWithGuest, hostId, pendingAttendee);
+    await saveNewEventWithGuest(eventWithGuest, hostId, acceptedAttendee);
+
+    const agent = request.agent(app);
+    await agent.post("/account/signin").send(guestUser);
+    const response = await agent.get("/users/guest");
+    expect(response.status).toBe(200);
+    expect(response.body.invitedEvents[0].attendees[0].status).toBe("pending");
+    expect(response.body.invitedEvents.length).toBe(1);
+    expect(response.body.acceptedEvents[0].attendees[0].status).toBe(
+      "accepted"
+    );
+    expect(response.body.acceptedEvents.length).toBe(1);
   });
 });
