@@ -6,9 +6,6 @@ const getDate = require("../helpers/getDate");
 const format = require("date-fns/format");
 const { TEST_EVENTS, TEST_USER } = require("./testData");
 
-// Add event listener to log unhandledRejections
-process.on("unhandledRejection", r => console.log(r));
-
 const saveNewUser = async user => {
   const { username } = user;
   const newUser = new User({
