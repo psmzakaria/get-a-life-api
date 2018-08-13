@@ -2,7 +2,7 @@ require("dotenv").config();
 const User = require("../models/user");
 const Event = require("../models/event");
 const eachDay = require("date-fns/each_day");
-const getDate = require("../helpers/getDate");
+const { getDate } = require("../helpers/dateUtils");
 const format = require("date-fns/format");
 const { TEST_EVENTS, TEST_USER } = require("./testData");
 

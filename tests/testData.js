@@ -26,7 +26,17 @@ const TEST_USER = {
   password: "password"
 };
 
+const TEST_PROPOSED_DATES = [new Date("01/01/2018"), new Date("01/02/2018")];
+const STUB_EVENT = {
+  title: "some mock event",
+  proposedDates: TEST_PROPOSED_DATES,
+  attendees: [],
+  matchedDates: []
+};
+
 module.exports = {
   TEST_EVENTS,
-  TEST_USER
+  TEST_USER,
+  TEST_PROPOSED_DATES,
+  STUB_EVENT
 };

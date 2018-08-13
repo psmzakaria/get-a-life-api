@@ -1,27 +1,28 @@
 const eachDay = require("date-fns/each_day");
 const format = require("date-fns/format");
-const User = require("../models/user");
 const Event = require("./../models/event");
-const getDate = require("../helpers/getDate");
+const { getDate } = require("../helpers/dateUtils");
+
+const formatDates = dates =>
+  dates.map(date => {
+    return format(date, "YYYYMMDD");
+  });
 
 const createEvent = async (req, res, next) => {
   const startDate = getDate(req.body.startDate);
   const endDate = getDate(req.body.endDate);
 
-  const result = eachDay(startDate, endDate);
+  const rangeOfDates = eachDay(startDate, endDate);
 
-  const newEvent = new Event({
+  const event = await Event.create({
     title: req.body.title,
-    proposedDates: result.map(date => {
-      return format(date, "YYYYMMDD");
-    }),
+    proposedDates: formatDates(rangeOfDates),
     hostId: req.user._id,
     description: req.body.description,
     attendees: req.body.attendees
   });
-  const event = await newEvent.save();
 
-  req.event = event;
+  req.event = event.toObject();
   next();
 };
 
@@ -55,17 +56,17 @@ const updateAttendeeAvailabilityInEvent = async (req, res, next) => {
     availableDates
   );
 
-    const event = await Event.findById(eventId);
+  const event = await Event.findById(eventId);
 
-    event.attendees.forEach(async attendee => {
-      if (attendee.userId.toString() === userId) {
-        attendee.availableDates = availableDates;
-        attendee.status = status;
-        await event.save();
-      }
-    });
-    next()
-}
+  event.attendees.forEach(async attendee => {
+    if (attendee.userId.toString() === userId) {
+      attendee.availableDates = availableDates;
+      attendee.status = status;
+      await event.save();
+    }
+  });
+  next();
+};
 
 module.exports = {
   createEvent,

@@ -1,4 +1,4 @@
-const getDate = require("../../helpers/getDate");
+const { getDate } = require("../../helpers/dateUtils");
 
 test("should return date object", () => {
   const year = "2018";
