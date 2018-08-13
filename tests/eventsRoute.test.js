@@ -64,7 +64,8 @@ describe("POST /events/create", () => {
       title: "event 1",
       startDate: "13/07/2018",
       endDate: "15/07/2018",
-      attendees: [user1.username, user2.username]
+      description: "new description",
+      attendees: [{ _id: user1Id }, { _id: user2Id }]
     };
     const agent = request.agent(app);
     await agent.post("/account/signin").send(TEST_USER);
@@ -72,7 +73,7 @@ describe("POST /events/create", () => {
 
     expect(response.status).toBe(201);
     expect(response.body.attendees.length).toBe(2);
-    expect(response.body.attendees[0].userId).toContain(user1Id);
+    expect(response.body.attendees[0]._id).toContain(user1Id);
   });
 });
 

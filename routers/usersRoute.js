@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/all", authenticateUser, async (req, res, next) => {
   try {
-    const allUsernames = await User.find().select("username -_id");
+    const allUsernames = await User.find().select("username");
     res.status(200).json({ allUsernames });
   } catch (error) {
     res.status(404).json({ message: "Not found" });

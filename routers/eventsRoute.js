@@ -18,15 +18,6 @@ router.post(
 
       const result = eachDay(startDate, endDate);
 
-      const attendeesPromise = req.body.attendees.map(async attendee => {
-        const attendeeData = await User.findOne({ username: attendee });
-        return {
-          userId: attendeeData._id,
-          status: "pending"
-        };
-      });
-      const attendees = await Promise.all(attendeesPromise);
-
       const newEvent = new Event({
         title: req.body.title,
         proposedDates: result.map(date => {
@@ -34,10 +25,9 @@ router.post(
         }),
         hostId: req.user._id,
         description: req.body.description,
-        attendees: attendees
+        attendees: req.body.attendees
       });
       const event = await newEvent.save();
-
       res.status(201).json(event);
     } catch (error) {
       next(error);
@@ -73,13 +63,6 @@ router.put("/:id/rsvp", async (req, res, next) => {
   const { status, availableDates } = req.body;
   const username = req.cookies["username"];
   const userId = req.cookies["userId"];
-  console.log(
-    "username and userId and status and availableDates",
-    username,
-    userId,
-    status,
-    availableDates
-  );
 
   try {
     const event = await Event.findById(eventId);

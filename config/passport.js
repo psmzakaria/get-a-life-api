@@ -7,7 +7,6 @@ const User = require("./../models/user");
 
 const cookieExtractor = function(req) {
   var token = null;
-  console.log(req.cookies);
   if (req && req.cookies) {
     token = req.cookies["jwt"];
   }
