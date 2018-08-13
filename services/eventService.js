@@ -5,7 +5,6 @@ const Event = require("./../models/event");
 const getDate = require("../helpers/getDate");
 
 const createEvent = async (req, res, next) => {
-  try {
     const startDate = getDate(req.body.startDate);
     const endDate = getDate(req.body.endDate);
 
@@ -24,9 +23,6 @@ const createEvent = async (req, res, next) => {
 
     req.event = event;
     next();
-  } catch (error) {
-    next(error);
-  }
 };
 
 module.exports = {

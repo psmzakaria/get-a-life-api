@@ -3,13 +3,14 @@ const Event = require("./../models/event");
 const eventService = require("../services/eventService");
 const eventsController = require("../controllers/eventsController");
 const { authenticateUser } = require("../middlewares/auth");
+const { asyncErrorHandler } = require("../middlewares/asyncErrorHandler");
 
 const router = express.Router();
 
 router.post(
   "/create",
   authenticateUser,
-  eventService.createEvent,
+  asyncErrorHandler(eventService.createEvent),
   eventsController.respondWithCreatedEvent
 );
 
