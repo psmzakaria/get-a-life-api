@@ -14,26 +14,6 @@ router.get("/all", authenticateUser, async (req, res, next) => {
   }
 });
 
-// obsolete for now
-router.post("/findUser", authenticateUser, async (req, res, next) => {
-  const users = await User.find();
-  const queryUsername = req.body.username;
-
-  if (queryUsername === undefined) {
-    res.status(200).json({ message: "no username query parameter" });
-  } else {
-    const queryUsernameLower = queryUsername.toLowerCase();
-    const foundUser = users.filter(
-      user => user.username.toLowerCase() === queryUsernameLower
-    )[0];
-
-    if (foundUser === undefined) {
-      res.status(404).json({ message: "user not found" });
-    } else {
-      res.status(200).json({ message: "user found" });
-    }
-  }
-});
 //GET only user's name
 router.get("/:username", authenticateUser, async (req, res, next) => {
   try {

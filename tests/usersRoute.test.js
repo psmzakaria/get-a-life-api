@@ -29,31 +29,6 @@ describe("GET /users/all", () => {
   });
 });
 
-describe("GET /users/findUser", () => {
-  test("should return back a username when query matches ", async () => {
-    const agent = request.agent(app);
-    await agent.post("/account/signin").send(TEST_USER);
-
-    const response = await agent
-      .post("/users/findUser")
-      .send({ username: TEST_USER.username });
-
-    expect(response.status).toBe(200);
-  });
-
-  test("should return back a user not found when query does not match ", async () => {
-    const agent = request.agent(app);
-    await agent.post("/account/signin").send(TEST_USER);
-
-    const response = await agent
-      .post("/users/findUser")
-      .send({ username: "notRegistered" });
-
-    // expect(response.status).toBe(404);
-    expect(response.body.message).toBe("user not found");
-  });
-});
-
 describe("GET users/:username", () => {
   test("should provide correct status body", async () => {
     const agent = request.agent(app);
