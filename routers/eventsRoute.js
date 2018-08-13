@@ -4,6 +4,7 @@ const eventService = require("../services/eventService");
 const eventsController = require("../controllers/eventsController");
 const { authenticateUser } = require("../middlewares/auth");
 const { asyncErrorHandler } = require("../middlewares/asyncErrorHandler");
+const { error400sHandler } = require("../middlewares/errorHandler");
 
 const router = express.Router();
 
@@ -14,28 +15,11 @@ router.post(
   eventsController.respondWithCreatedEvent
 );
 
-router.get("/:id", async (req, res, next) => {
-  const eventId = req.params.id;
-  try {
-    const event = await Event.findById(eventId).populate("hostId");
-    if (event === null) {
-      payload = null;
-    } else {
-      payload = {
-        ...event._doc,
-        hostName: event.hostId.username,
-        hostId: event.hostId._id
-      };
-    }
-
-    res.json({ payload });
-  } catch (error) {
-    if (error.name === "CastError") {
-      error.status = 400;
-    }
-    next(error);
-  }
-});
+router.get(
+  "/:id",
+  asyncErrorHandler(eventService.getEventByIdWithHostName),
+  eventsController.respondWithEvent
+);
 
 router.put("/:id/rsvp", async (req, res, next) => {
   const eventId = req.params.id;
@@ -62,5 +46,5 @@ router.put("/:id/rsvp", async (req, res, next) => {
 });
 
 module.exports = app => {
-  app.use("/events", router);
+  app.use("/events", router, error400sHandler);
 };

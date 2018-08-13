@@ -8,8 +8,14 @@ const errorHandler = (err, req, res, next) => {
 };
 
 const error400sHandler = (err, req, res, next) => {
-  if (err.name === "ValidationError") {
-    return res.status(400).json(err.message);
+  if (err.name === "ValidationError" || err.name === "CastError") {
+    return res.status(400).json({
+      errors: {
+        message: err.message
+      }
+    });
+  } else {
+    next(err);
   }
 };
 
