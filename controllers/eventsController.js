@@ -8,7 +8,12 @@ const respondWithEvent = (req, res, next) => {
   res.status(200).json({ payload });
 };
 
+const respondWithSuccessfulUpdateMsg = (req, res, next) => {
+  res.status(200).json({ message: "updated" });
+};
+
 module.exports = {
   respondWithCreatedEvent,
-  respondWithEvent
+  respondWithEvent,
+  respondWithSuccessfulUpdateMsg
 };

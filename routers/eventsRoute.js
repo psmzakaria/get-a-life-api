@@ -21,29 +21,12 @@ router.get(
   eventsController.respondWithEvent
 );
 
-router.put("/:id/rsvp", async (req, res, next) => {
-  const eventId = req.params.id;
-  const { status, availableDates } = req.body;
-  const username = req.cookies["username"];
-  const userId = req.cookies["userId"];
-
-  try {
-    const event = await Event.findById(eventId);
-
-    event.attendees.forEach(async attendee => {
-      if (attendee.userId.toString() === userId) {
-        attendee.availableDates = availableDates;
-        attendee.status = status;
-        await event.save();
-      }
-    });
-    res.json({ message: "updated" });
-  } catch (error) {
-    error.status = 400;
-    console.log(error);
-    next(error);
-  }
-});
+router.put(
+  "/:id/rsvp",
+  authenticateUser,
+  asyncErrorHandler(eventService.updateAttendeeAvailabilityInEvent),
+  eventsController.respondWithSuccessfulUpdateMsg
+);
 
 module.exports = app => {
   app.use("/events", router, error400sHandler);

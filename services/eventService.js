@@ -42,7 +42,33 @@ const getEventByIdWithHostName = async (req, res, next) => {
   next();
 };
 
+const updateAttendeeAvailabilityInEvent = async (req, res, next) => {
+  const eventId = req.params.id;
+  const { status, availableDates } = req.body;
+  const username = req.cookies["username"];
+  const userId = req.cookies["userId"];
+  console.log(
+    "username and userId and status and availableDates",
+    username,
+    userId,
+    status,
+    availableDates
+  );
+
+    const event = await Event.findById(eventId);
+
+    event.attendees.forEach(async attendee => {
+      if (attendee.userId.toString() === userId) {
+        attendee.availableDates = availableDates;
+        attendee.status = status;
+        await event.save();
+      }
+    });
+    next()
+}
+
 module.exports = {
   createEvent,
-  getEventByIdWithHostName
+  getEventByIdWithHostName,
+  updateAttendeeAvailabilityInEvent
 };
