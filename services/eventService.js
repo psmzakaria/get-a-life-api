@@ -2,6 +2,7 @@ const eachDay = require("date-fns/each_day");
 const format = require("date-fns/format");
 const Event = require("./../models/event");
 const { getDate } = require("../helpers/dateUtils");
+const { formatAttendeesData } = require("../helpers/dataFormatUtils");
 
 const formatDates = dates =>
   dates.map(date => {
@@ -23,6 +24,17 @@ const createEvent = async (req, res, next) => {
   });
 
   req.event = event.toObject();
+  next();
+};
+
+const getAttendance = async (req, res, next) => {
+  const event = await Event.findOne({ _id: req.params.id }).populate({
+    path: "attendees.userId",
+    select: "username -_id"
+  });
+  const attendance = formatAttendeesData(event);
+
+  req.attendance = attendance;
   next();
 };
 
@@ -71,5 +83,6 @@ const updateAttendeeAvailabilityInEvent = async (req, res, next) => {
 module.exports = {
   createEvent,
   getEventByIdWithHostName,
-  updateAttendeeAvailabilityInEvent
+  updateAttendeeAvailabilityInEvent,
+  getAttendance
 };
