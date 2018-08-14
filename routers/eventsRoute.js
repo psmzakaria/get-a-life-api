@@ -16,6 +16,12 @@ router.post(
 );
 
 router.get(
+  "/:id/dates",
+  asyncErrorHandler(eventService.getAttendance),
+  eventsController.respondWithAttendance
+)
+
+router.get(
   "/:id",
   asyncErrorHandler(eventService.getEventByIdWithHostName),
   eventsController.respondWithEvent

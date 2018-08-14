@@ -12,8 +12,14 @@ const respondWithSuccessfulUpdateMsg = (req, res, next) => {
   res.status(200).json({ message: "updated" });
 };
 
+const respondWithAttendance = (req, res, next) => {
+  const attendance = req.attendance;
+  res.status(200).json(attendance);
+};
+
 module.exports = {
   respondWithCreatedEvent,
   respondWithEvent,
-  respondWithSuccessfulUpdateMsg
+  respondWithSuccessfulUpdateMsg,
+  respondWithAttendance
 };

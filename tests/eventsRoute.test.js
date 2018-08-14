@@ -7,7 +7,8 @@ const {
   tearDownMongoose,
   addTestUser,
   addTestEvents,
-  saveNewUser
+  saveNewUser,
+  saveNewEventWithGuest
 } = require("./testUtils");
 const { TEST_USER } = require("./testData");
 
@@ -105,6 +106,60 @@ describe("GET /events/:id", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.payload).toBeTruthy();
+  });
+});
+
+describe("GET /events/:id/dates", async () => {
+  test("should return an object with two array, pending and attending.", async () => {
+    const hostUser = { username: "host", password: "000000" };
+    const guestUser = { username: "guest", password: "000000" };
+    const guest02User = { username: "guest02", password: "000000" };
+    const hostId = await saveNewUser(hostUser);
+    const guestId = await saveNewUser(guestUser);
+    const guest02Id = await saveNewUser(guest02User);
+    const eventWithGuest = {
+      title: "get a life",
+      startDate: "13/07/2018",
+      endDate: "15/07/2018"
+    };
+    const attendees = [
+      { userId: guestId, status: "pending" },
+      {
+        userId: guest02Id,
+        availableDates: ["20180713", "20180714"],
+        status: "accepted"
+      }
+    ];
+    const eventId = await saveNewEventWithGuest(
+      eventWithGuest,
+      hostId,
+      attendees
+    );
+
+    const agent = request.agent(app);
+    const response = await agent.get(`/events/${eventId}/dates`);
+
+    expect(response.status).toBe(200);
+    expect(Object.keys(response.body).length).toBe(2);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        attending: expect.any(Array),
+        pending: expect.any(Array)
+      })
+    );
+
+    response.body.attending.forEach(day => {
+      expect(day).toEqual(
+        expect.objectContaining({
+          date: expect.any(String),
+          attendees: expect.any(Array)
+        })
+      );
+    });
+
+    response.body.pending.forEach(name => {
+      expect(typeof name).toBe("string");
+    });
   });
 });
 
