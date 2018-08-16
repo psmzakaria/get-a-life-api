@@ -16,15 +16,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 var corsOptions = {
-  origin: [/http:\/\/localhost:.*/, /http[s]*:\/\/.*\.herokuapp.com/],
+  origin: [/http:\/\/localhost:.*/, /http[s]*:\/\/get-a-life.*\.herokuapp.com/],
   credentials: true
 };
 
-if (process.env.NODE_ENV === "production") {
-  app.use(cors({ origin: process.env.GAL_UI_URL, credentials: true }));
-} else {
-  app.use(cors(corsOptions));
-}
+app.use(cors(corsOptions));
 
 indexRouter(app);
 accountRouter(app);
