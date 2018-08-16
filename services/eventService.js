@@ -80,9 +80,17 @@ const updateAttendeeAvailabilityInEvent = async (req, res, next) => {
   next();
 };
 
+const updateEvent = async (req, res, next) => {
+  const eventId = req.params.id;
+  await Event.findByIdAndUpdate(eventId, req.body);
+
+  next();
+};
+
 module.exports = {
   createEvent,
   getEventByIdWithHostName,
   updateAttendeeAvailabilityInEvent,
-  getAttendance
+  getAttendance,
+  updateEvent
 };

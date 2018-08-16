@@ -19,7 +19,7 @@ router.get(
   "/:id/dates",
   asyncErrorHandler(eventService.getAttendance),
   eventsController.respondWithAttendance
-)
+);
 
 router.get(
   "/:id",
@@ -31,6 +31,13 @@ router.put(
   "/:id/rsvp",
   authenticateUser,
   asyncErrorHandler(eventService.updateAttendeeAvailabilityInEvent),
+  eventsController.respondWithSuccessfulUpdateMsg
+);
+
+router.put(
+  "/:id/update",
+  authenticateUser,
+  asyncErrorHandler(eventService.updateEvent),
   eventsController.respondWithSuccessfulUpdateMsg
 );
 
