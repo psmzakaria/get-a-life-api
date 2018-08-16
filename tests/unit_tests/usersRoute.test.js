@@ -102,7 +102,7 @@ test("GET users/:username -should provide correct status body ", async () => {
   const agent = request.agent(app);
   const response = await agent.get("/users/user01");
 
-  expect(response.body.statuses[0]).toEqual("Pending for reply");
-  expect(response.body.statuses[1]).toEqual("Pending for host reply");
-  expect(response.body.statuses[2]).toEqual("06082018");
+  expect(response.body.hostedStatuses[0]).toEqual("Pending for reply");
+  // expect(response.body.hostedStatuses[1]).toEqual("Pending for host reply");
+  expect(response.body.hostedStatuses[2]).toEqual("06082018");
 });

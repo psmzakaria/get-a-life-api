@@ -36,13 +36,16 @@ describe("GET users/:username", () => {
     const response = await agent.get(`/users/${TEST_USER.username}`);
 
     expect(response.status).toBe(200);
-    expect(Object.keys(response.body).length).toBe(5);
+    expect(Object.keys(response.body).length).toBe(7);
     expect(response.body).toEqual(
       expect.objectContaining({
         username: expect.any(String),
         hostedEvents: expect.any(Array),
-        statuses: expect.any(Array),
-        invitedEvents: expect.any(Array)
+        hostedStatuses: expect.any(Array),
+        invitedEvents: expect.any(Array),
+        invitedStatuses: expect.any(Array),
+        acceptedEvents: expect.any(Array),
+        acceptedStatuses: expect.any(Array)
       })
     );
   });

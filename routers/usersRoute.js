@@ -37,11 +37,25 @@ router.get("/:username", authenticateUser, async (req, res, next) => {
       select: "username"
     });
 
-    const statuses = [];
+    const hostedStatuses = [];
 
     hostedEvents.forEach(event => {
       const status = getEventStatus(event);
-      statuses.push(status);
+      hostedStatuses.push(status);
+    });
+
+    const invitedStatuses = [];
+
+    invitedEvents.forEach(event => {
+      const status = getEventStatus(event);
+      invitedStatuses.push(status);
+    });
+
+    const acceptedStatuses = [];
+
+    acceptedEvents.forEach(event => {
+      const status = getEventStatus(event);
+      acceptedStatuses.push(status);
     });
 
     res.status(200).json({
@@ -49,7 +63,9 @@ router.get("/:username", authenticateUser, async (req, res, next) => {
       hostedEvents: hostedEvents,
       invitedEvents: invitedEvents,
       acceptedEvents: acceptedEvents,
-      statuses: statuses
+      hostedStatuses: hostedStatuses,
+      invitedStatuses: invitedStatuses,
+      acceptedStatuses: acceptedStatuses
     });
   } catch (error) {
     res.status(404);
