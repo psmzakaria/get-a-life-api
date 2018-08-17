@@ -61,6 +61,7 @@ router.get("/:username", authenticateUser, authenticateAccount, async (req, res,
 
     res.status(200).json({
       username: findUser.username,
+      userId: findUser._id,
       hostedEvents: hostedEvents,
       invitedEvents: invitedEvents,
       acceptedEvents: acceptedEvents,
