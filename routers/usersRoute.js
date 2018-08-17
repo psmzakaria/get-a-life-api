@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("./../models/user");
 const Event = require("./../models/event");
-const { authenticateUser } = require("../middlewares/auth");
+const { authenticateUser,authenticateAccount } = require("../middlewares/auth");
 const getEventStatus = require("../helpers/getEventStatus");
 const router = express.Router();
 
@@ -15,8 +15,9 @@ router.get("/all", authenticateUser, async (req, res, next) => {
 });
 
 //GET only user's name
-router.get("/:username", authenticateUser, async (req, res, next) => {
+router.get("/:username", authenticateUser, authenticateAccount, async (req, res, next) => {
   try {
+    console.log("here in rrouter")
     const findUser = await User.findOne({ username: req.params.username });
     const hostedEvents = await Event.find({ hostId: findUser._id }).populate({
       path: "hostId",

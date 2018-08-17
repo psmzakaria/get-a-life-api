@@ -12,13 +12,14 @@ const eventsRouter = require("./routers/eventsRoute");
 const { errorHandler } = require("./middlewares/errorHandler");
 
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 app.use(cookieParser());
 
 var corsOptions = {
   origin: [/http:\/\/localhost:.*/, /http[s]*:\/\/get-a-life.*\.herokuapp.com/],
   credentials: true
-};
+};  
 
 app.use(cors(corsOptions));
 

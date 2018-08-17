@@ -52,8 +52,17 @@ describe("GET users/:username", () => {
 
   test("should return status 401 without auth/signin", async () => {
     const agent = request.agent(app);
-
+    
     const response = await agent.get("/users/user01");
+    expect(response.status).toBe(401);
+  });
+
+  test.only("should return status 401 if req user cookie is not the same as req.params.id", async () => {
+    const agent = request.agent(app);
+    await agent.post("/account/signup").send({username: "newUser", password: "00000"});
+    await agent.post("/account/signin").send({username: "newUser", password: "00000"});
+
+    const response = await agent.get(`/users/${TEST_USER.username}`);
     expect(response.status).toBe(401);
   });
 
